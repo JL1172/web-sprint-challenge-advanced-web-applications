@@ -104,7 +104,6 @@ export default function App() {
   }
 
   const deleteArticle = article_id => {
-    console.log(article_id)
     axiosWithAuth().delete(` http://localhost:9000/api/articles/${article_id}`)
     .then(()=> {
       getArticles(); 
