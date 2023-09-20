@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import PT from 'prop-types'
 
 export default function Articles(props) {
-  const {redirectToLogin} = props; 
+  const {redirectToLogin,getArticles} = props; 
   // ✨ where are my props? Destructure them here
 
   // ✨ implement conditional logic: if no token exists
@@ -13,7 +13,7 @@ export default function Articles(props) {
     if (!window.localStorage.getItem("token")) {
         redirectToLogin();
     } else {
-      console.log("logged in")
+      getArticles(); 
     }
     // ✨ grab the articles here, on first render only
   },[])

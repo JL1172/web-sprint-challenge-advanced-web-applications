@@ -59,15 +59,13 @@ export default function App() {
     setMessage(""); 
     setSpinnerOn(true);
     axiosWithAuth().get("http://localhost:9000/api/articles").then(res=> {
-      console.log(res.data)
-      //setarticles to state
-      //message
-      ///setspinneroff
-
+      setArticles(res.data.articles)
+      setMessage(res.data.message)
     }).catch(err=> {
       redirectToLogin();
       console.error(err.message);
     })
+    .finally(()=> setSpinnerOn(false));
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch an authenticated request to the proper endpoint.
@@ -98,7 +96,7 @@ export default function App() {
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
       <Spinner />
-      <Message />
+      <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
@@ -111,7 +109,7 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm />
-              <Articles redirectToLogin = {redirectToLogin}/>
+              <Articles redirectToLogin = {redirectToLogin} getArticles={getArticles} articles={articles}/>
             </>
           } />
         </Routes>
