@@ -5,13 +5,14 @@ import { axiosWithAuth } from '../axios';
 const initialFormValues = { title: '', text: '', topic: '' }
 
 export default function ArticleForm(props) {
-  const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
-const {updateArticle,postArticle,currentArticle,putArticle,canceleable,setCurrentArticleId} = props;
+const {updateArticle,postArticle,currentArticle,putArticle,canceleable,setCurrentArticleId,
+secondValues,setSecondValues
+} = props;
 
   useEffect(() => {
     if (currentArticle) {
-      setValues(currentArticle);
+      setSecondValues(currentArticle);
     }
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
@@ -21,16 +22,15 @@ const {updateArticle,postArticle,currentArticle,putArticle,canceleable,setCurren
 
   const onChange = evt => {
     const { id, value } = evt.target
-    setValues({ ...values, [id]: value })
+    setSecondValues({ ...secondValues, [id]: value })
   }
 
   const onSubmit = evt => {
     evt.preventDefault()
     if (currentArticle) {
-      putArticle(currentArticle.article_id,values)
-      setValues("");
+      putArticle(currentArticle.article_id,secondValues)
     } else {
-      postArticle(values);
+      postArticle(secondValues);
     }
     // ✨ implement
     // We must submit a new post or update an existing one,
@@ -38,7 +38,7 @@ const {updateArticle,postArticle,currentArticle,putArticle,canceleable,setCurren
   }
 
   const isDisabled = () => {
-    if (values.title && values.text && values.topic) {
+    if (secondValues.title && secondValues.text && secondValues.topic) {
       return false;
     } return true;
     // ✨ implement
@@ -47,7 +47,7 @@ const {updateArticle,postArticle,currentArticle,putArticle,canceleable,setCurren
 
   const cancel = (e) => { 
     e.preventDefault();
-    setValues(initialFormValues)
+    setSecondValues(initialFormValues)
     canceleable();
   }
   return (
@@ -58,18 +58,18 @@ const {updateArticle,postArticle,currentArticle,putArticle,canceleable,setCurren
       <input
         maxLength={50}
         onChange={onChange}
-        value={values.title}
+        value={secondValues.title}
         placeholder="Enter title"
         id="title"
       />
       <textarea
         maxLength={200}
         onChange={onChange}
-        value={values.text}
+        value={secondValues.text}
         placeholder="Enter text"
         id="text"
       />
-      <select onChange={onChange} id="topic" value={values.topic}>
+      <select onChange={onChange} id="topic" value={secondValues.topic}>
         <option value="">-- Select topic --</option>
         <option value="JavaScript">JavaScript</option>
         <option value="React">React</option>

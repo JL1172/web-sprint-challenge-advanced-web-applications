@@ -12,12 +12,15 @@ const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
 
 const initialArticleId = null; 
+const initialFormValues2 = { title: '', text: '', topic: '' }
 export default function App() {
   // ✨ MVP can be achieved with these states
   const [message, setMessage] = useState('')
   const [articles, setArticles] = useState([])
   const [currentArticleId, setCurrentArticleId] = useState()
   const [spinnerOn, setSpinnerOn] = useState(false)
+
+  const [secondValues,setSecondValues]=useState(initialFormValues2)
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
@@ -80,16 +83,25 @@ export default function App() {
   const putArticle = (idToChange,modified) => {
     axiosWithAuth().put(`http://localhost:9000/api/articles/${idToChange}`,modified)
     .then((res)=> {
-      getArticles();
+      defaultGet().then(res=> {
+      setArticles(res.data.articles)
+      setSecondValues(initialFormValues2)
+    })
       setMessage(res.data.message)
     }).catch(err=> console.error(err.message))
     .finally(()=> canceleable())
   }
 
+  const defaultGet = () => {
+    return axiosWithAuth().get("http://localhost:9000/api/articles")
+  }
   const postArticle = (article) => {
     axiosWithAuth().post(" http://localhost:9000/api/articles",article)
     .then((res)=> {
-      getArticles();
+      defaultGet().then(res=> {
+      setArticles(res.data.articles)
+      setSecondValues(initialFormValues2)
+    })
       setMessage(res.data.message)
     })
     .catch(err=> console.error(err.message)); 
@@ -108,8 +120,10 @@ export default function App() {
   const deleteArticle = article_id => {
     axiosWithAuth().delete(` http://localhost:9000/api/articles/${article_id}`)
     .then((res)=> {
-      getArticles(); 
+      axiosWithAuth().get("http://localhost:9000/api/articles").then(res=> {
+      setArticles(res.data.articles)})
       setMessage(res.data.message)
+      setSecondValues(initialFormValues2)
     }).catch(err=> console.error(err.message));
     // ✨ implement
   }
@@ -133,7 +147,7 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm currentArticle={currentArticleId} updateArticle={updateArticle} postArticle={postArticle} putArticle = {putArticle}
-               canceleable = {canceleable} setCurrentArticleId = {setCurrentArticleId}/>
+               canceleable = {canceleable} setCurrentArticleId = {setCurrentArticleId} secondValues = {secondValues} setSecondValues = {setSecondValues}/>
 
               <Articles redirectToLogin = {redirectToLogin} getArticles={getArticles} articles={articles}
               updateArticle = {updateArticle} deleteArticle ={deleteArticle}
