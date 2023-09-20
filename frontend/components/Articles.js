@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import PT from 'prop-types'
 
 export default function Articles(props) {
-  const {redirectToLogin,getArticles} = props; 
+  const {redirectToLogin,getArticles,articles, updateArticle,deleteArticle} = props; 
   // ✨ where are my props? Destructure them here
 
   // ✨ implement conditional logic: if no token exists
@@ -24,9 +24,9 @@ export default function Articles(props) {
     <div className="articles">
       <h2>Articles</h2>
       {
-        ![].length
+        !articles.length
           ? 'No articles yet'
-          : [].map(art => {
+          : articles.map(art => {
             return (
               <div className="article" key={art.article_id}>
                 <div>
@@ -35,8 +35,8 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={true} onClick={Function.prototype}>Edit</button>
-                  <button disabled={true} onClick={Function.prototype}>Delete</button>
+                  <button onClick={()=>updateArticle(art)}>Edit</button>
+                  <button onClick={()=>deleteArticle(art.article_id)}>Delete</button>
                 </div>
               </div>
             )

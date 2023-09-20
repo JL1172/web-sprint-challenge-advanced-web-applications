@@ -83,12 +83,14 @@ export default function App() {
     // to inspect the response from the server.
   }
 
-  const updateArticle = ({ article_id, article }) => {
+  const updateArticle = (article) => {
+    console.log(article); 
     // ✨ implement
     // You got this!
   }
 
   const deleteArticle = article_id => {
+    console.log(article_id)
     // ✨ implement
   }
 
@@ -109,7 +111,9 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm />
-              <Articles redirectToLogin = {redirectToLogin} getArticles={getArticles} articles={articles}/>
+              <Articles redirectToLogin = {redirectToLogin} getArticles={getArticles} articles={articles}
+              updateArticle = {updateArticle} deleteArticle ={deleteArticle}
+              />
             </>
           } />
         </Routes>
