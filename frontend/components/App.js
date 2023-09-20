@@ -78,20 +78,19 @@ export default function App() {
   }
 
   const putArticle = (idToChange,modified) => {
-    console.log(idToChange)
-    axiosWithAuth().put(`http://localhost:9000/api/articles/:${idToChange}`,modified)
-    .then(res=> {
-      console.log(res)
-      console.log('this is putted')
-    })
+    axiosWithAuth().put(`http://localhost:9000/api/articles/${idToChange}`,modified)
+    .then(()=> {
+      getArticles();
+    }).catch(err=> console.error(err.message))
+    .finally(()=> canceleable())
   }
 
   const postArticle = (article) => {
     axiosWithAuth().post(" http://localhost:9000/api/articles",article)
-    .then(res=> {
-      console.log(res)
-      console.log("this is posted")
+    .then(()=> {
+      getArticles();
     })
+    .catch(err=> console.error(err.message)); 
     // ✨ implement
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
@@ -114,7 +113,7 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner />
+      <Spinner spinnerOn = {spinnerOn}/>
       <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
@@ -128,7 +127,7 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm currentArticle={currentArticleId} updateArticle={updateArticle} postArticle={postArticle} putArticle = {putArticle}
-               canceleable = {canceleable}/>
+               canceleable = {canceleable} setCurrentArticleId = {setCurrentArticleId}/>
 
               <Articles redirectToLogin = {redirectToLogin} getArticles={getArticles} articles={articles}
               updateArticle = {updateArticle} deleteArticle ={deleteArticle}

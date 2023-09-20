@@ -21,8 +21,8 @@ const StyledSpinner = styled.div`
   }
 `
 
-export default function Spinner({ on }) {
-  if (!on) return null
+export default function Spinner({spinnerOn}) {
+  if (!spinnerOn) return null
   return (
     <StyledSpinner id="spinner">
       <h3>&nbsp;.</h3>&nbsp;&nbsp;&nbsp;Please wait...
