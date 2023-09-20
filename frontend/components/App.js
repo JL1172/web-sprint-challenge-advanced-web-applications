@@ -6,6 +6,7 @@ import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
 import axios from 'axios'
+import { axiosWithAuth } from '../axios'
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -19,11 +20,14 @@ export default function App() {
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
-  const redirectToLogin = () => { /* ✨ implement */ }
-  const redirectToArticles = () => { /* ✨ implement */ }
+  const redirectToLogin = () => { navigate("/")}
+  const redirectToArticles = () => { navigate("/articles")}
 
   const logout = () => {
     // ✨ implement
+    window.localStorage.clear();
+    setMessage("Goodbye!")
+    redirectToLogin();
     // If a token is in local storage it should be removed,
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
@@ -37,13 +41,12 @@ export default function App() {
     axios.post("http://localhost:9000/api/login",credentials).then(res=> {
       window.localStorage.setItem("token",JSON.stringify(res.data.token))
       setMessage(res.data.message); 
-      navigate("/articles"); 
+      redirectToArticles();
       setSpinnerOn(false); 
     })
-    .catch(err=> console.error(err.message))
-    .finally(()=> {
-      return true;
-    })
+    .catch(err=> {
+      setSpinnerOn(false); 
+      console.error(err.message)})
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch a request to the proper endpoint.
@@ -53,6 +56,18 @@ export default function App() {
   }
 
   const getArticles = () => {
+    setMessage(""); 
+    setSpinnerOn(true);
+    axiosWithAuth().get("http://localhost:9000/api/articles").then(res=> {
+      console.log(res.data)
+      //setarticles to state
+      //message
+      ///setspinneroff
+
+    }).catch(err=> {
+      redirectToLogin();
+      console.error(err.message);
+    })
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch an authenticated request to the proper endpoint.
@@ -96,7 +111,7 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm />
-              <Articles />
+              <Articles redirectToLogin = {redirectToLogin}/>
             </>
           } />
         </Routes>
