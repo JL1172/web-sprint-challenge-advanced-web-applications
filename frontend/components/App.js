@@ -30,6 +30,18 @@ export default function App() {
   }
 
   const login = ({ username, password }) => {
+    setSpinnerOn(true)
+    const credentials = {username : username.trim(), password : password.trim()}
+    axios.post("http://localhost:9000/api/login").then(res=> {
+      console.log(res)
+      setSpinnerOn(false); 
+      navigate("/articles"); 
+    })
+    .catch(err=> console.error(err.message))
+    .finally(()=> {
+      setMessage("");
+
+    })
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch a request to the proper endpoint.
