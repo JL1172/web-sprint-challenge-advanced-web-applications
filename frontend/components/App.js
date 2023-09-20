@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useDebugValue, useState } from 'react'
 import { NavLink, Routes, Route, useNavigate } from 'react-router-dom'
 import Articles from './Articles'
 import LoginForm from './LoginForm'
@@ -11,6 +11,7 @@ import { axiosWithAuth } from '../axios'
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
 
+const initialArticleId = null; 
 export default function App() {
   // ✨ MVP can be achieved with these states
   const [message, setMessage] = useState('')
@@ -76,7 +77,21 @@ export default function App() {
     // Don't forget to turn off the spinner!
   }
 
-  const postArticle = article => {
+  const putArticle = (idToChange,modified) => {
+    console.log(idToChange)
+    axiosWithAuth().put(`http://localhost:9000/api/articles/:${idToChange}`,modified)
+    .then(res=> {
+      console.log(res)
+      console.log('this is putted')
+    })
+  }
+
+  const postArticle = (article) => {
+    axiosWithAuth().post(" http://localhost:9000/api/articles",article)
+    .then(res=> {
+      console.log(res)
+      console.log("this is posted")
+    })
     // ✨ implement
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
@@ -84,7 +99,7 @@ export default function App() {
   }
 
   const updateArticle = (article) => {
-    console.log(article); 
+    setCurrentArticleId(article); 
     // ✨ implement
     // You got this!
   }
@@ -93,7 +108,9 @@ export default function App() {
     console.log(article_id)
     // ✨ implement
   }
-
+  const canceleable = () => {
+    setCurrentArticleId(initialArticleId);
+  }
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
@@ -110,7 +127,9 @@ export default function App() {
           <Route path="/" element={<LoginForm login = {login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm />
+              <ArticleForm currentArticle={currentArticleId} updateArticle={updateArticle} postArticle={postArticle} putArticle = {putArticle}
+               canceleable = {canceleable}/>
+
               <Articles redirectToLogin = {redirectToLogin} getArticles={getArticles} articles={articles}
               updateArticle = {updateArticle} deleteArticle ={deleteArticle}
               />
