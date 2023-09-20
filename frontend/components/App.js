@@ -79,16 +79,18 @@ export default function App() {
 
   const putArticle = (idToChange,modified) => {
     axiosWithAuth().put(`http://localhost:9000/api/articles/${idToChange}`,modified)
-    .then(()=> {
+    .then((res)=> {
       getArticles();
+      setMessage(res.data.message)
     }).catch(err=> console.error(err.message))
     .finally(()=> canceleable())
   }
 
   const postArticle = (article) => {
     axiosWithAuth().post(" http://localhost:9000/api/articles",article)
-    .then(()=> {
+    .then((res)=> {
       getArticles();
+      setMessage(res.data.message)
     })
     .catch(err=> console.error(err.message)); 
     // ✨ implement
@@ -105,8 +107,9 @@ export default function App() {
 
   const deleteArticle = article_id => {
     axiosWithAuth().delete(` http://localhost:9000/api/articles/${article_id}`)
-    .then(()=> {
+    .then((res)=> {
       getArticles(); 
+      setMessage(res.data.message)
     }).catch(err=> console.error(err.message));
     // ✨ implement
   }
