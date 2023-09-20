@@ -18,9 +18,9 @@ const {login} = props;
   const onSubmit = evt => {
     evt.preventDefault()
     // ✨ implement
-    console.log("worked")
+    login(values);
+    setValues(initialFormValues); 
   }
-
   const isDisabled = () => {
     if (values.username.trim().length <3 || values.password.trim() < 8) {
       return true;

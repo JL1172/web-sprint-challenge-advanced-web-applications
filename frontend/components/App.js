@@ -5,6 +5,7 @@ import LoginForm from './LoginForm'
 import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
+import axios from 'axios'
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -30,17 +31,18 @@ export default function App() {
   }
 
   const login = ({ username, password }) => {
+    setMessage(""); 
     setSpinnerOn(true)
     const credentials = {username : username.trim(), password : password.trim()}
-    axios.post("http://localhost:9000/api/login").then(res=> {
-      console.log(res)
-      setSpinnerOn(false); 
+    axios.post("http://localhost:9000/api/login",credentials).then(res=> {
+      window.localStorage.setItem("token",JSON.stringify(res.data.token))
+      setMessage(res.data.message); 
       navigate("/articles"); 
+      setSpinnerOn(false); 
     })
     .catch(err=> console.error(err.message))
     .finally(()=> {
-      setMessage("");
-
+      return true;
     })
     // ✨ implement
     // We should flush the message state, turn on the spinner
@@ -90,7 +92,7 @@ export default function App() {
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm login = {login}/>} />
           <Route path="articles" element={
             <>
               <ArticleForm />
